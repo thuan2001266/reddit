@@ -1,8 +1,11 @@
 import React from "react";
 import { Flex, Icon, Text, Stack, Button } from "@chakra-ui/react";
 import { GiCheckedShield } from "react-icons/gi";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
 
 const Premium: React.FC = () => {
+  const setAuthModalState = useSetRecoilState(authModalState);
   return (
     <Flex
       direction="column"
@@ -20,7 +23,11 @@ const Premium: React.FC = () => {
           <Text>The best Reddit experience, with monthly Coins</Text>
         </Stack>
       </Flex>
-      <Button height="30px" bg="brand.100">
+      <Button
+        height="30px"
+        bg="brand.100"
+        onClick={() => setAuthModalState({ open: true, view: "notAvailable" })}
+      >
         Try Now
       </Button>
     </Flex>

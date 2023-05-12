@@ -1,3 +1,4 @@
+import { authModalState } from "@/atoms/authModalAtom";
 import { Community } from "@/atoms/communitiesAtom";
 import { firestore } from "@/firebase/clientApp";
 import useCommunityData from "@/hooks/useCommunityData";
@@ -16,8 +17,10 @@ import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { FaReddit } from "react-icons/fa";
+import { useSetRecoilState } from "recoil";
 
 const Recommendations: React.FC = () => {
+  const setAuthModalState = useSetRecoilState(authModalState);
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(false);
   const { communityStateValue, onJoinOrLeaveCommunity } = useCommunityData();
@@ -150,7 +153,13 @@ const Recommendations: React.FC = () => {
               );
             })}
             <Box p={"10px 20px"}>
-              <Button height={"30px"} width={"100%"}>
+              <Button
+                height={"30px"}
+                width={"100%"}
+                onClick={() =>
+                  setAuthModalState({ open: true, view: "notAvailable" })
+                }
+              >
                 View All
               </Button>
             </Box>

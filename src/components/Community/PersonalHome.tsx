@@ -1,8 +1,11 @@
 import React from "react";
 import { Button, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import { FaReddit } from "react-icons/fa";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
 
 const PersonalHome: React.FC = () => {
+  const setAuthModalState = useSetRecoilState(authModalState);
   return (
     <Flex
       direction="column"
@@ -33,8 +36,21 @@ const PersonalHome: React.FC = () => {
           <Text fontSize="9pt">
             Your personal Reddit frontpage, built for you.
           </Text>
-          <Button height="30px">Create Post</Button>
-          <Button variant="outline" height="30px">
+          <Button
+            height="30px"
+            onClick={() =>
+              setAuthModalState({ open: true, view: "notAvailable" })
+            }
+          >
+            Create Post
+          </Button>
+          <Button
+            variant="outline"
+            height="30px"
+            onClick={() =>
+              setAuthModalState({ open: true, view: "notAvailable" })
+            }
+          >
             Create Community
           </Button>
         </Stack>

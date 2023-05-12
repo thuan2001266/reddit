@@ -8,6 +8,7 @@ import Posts from "@/components/Posts/Posts";
 import { firestore } from "@/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import Head from "next/head";
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import safeJsonStringtify from "safe-json-stringify";
@@ -33,6 +34,10 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
 
   return (
     <>
+      <Head>
+        <title>{communityData.id}</title>
+        <link rel="icon" href="/images/redditFace.svg" />
+      </Head>
       <Header communityData={communityData}></Header>
       <PageContent>
         <>

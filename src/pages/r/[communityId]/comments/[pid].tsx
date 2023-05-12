@@ -9,6 +9,7 @@ import usePosts from "@/hooks/usePosts";
 import { Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { doc, getDoc, query } from "firebase/firestore";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -42,37 +43,54 @@ const PostPage: React.FC = () => {
   }, [router.query, postStateValue.selectedPost]);
 
   return (
-    <PageContent>
-      {/* post
-       */}
-      <>
-        {postStateValue.selectedPost && (
-          <PostItem
-            post={postStateValue.selectedPost}
-            onVote={onVote}
-            onDeletePost={onDeletePost}
-            userVoteValue={
-              postStateValue.postVotes.find(
-                (item) => item.postId === postStateValue.selectedPost?.id
-              )?.voteValue
-            }
-            userIsCreator={user?.uid === postStateValue.selectedPost?.creatorId}
-          ></PostItem>
-        )}{" "}
-        <Comments
-          user={user as User}
-          selectedPost={postStateValue.selectedPost}
-          communityId={postStateValue.selectedPost?.communityId as string}
-        />
-      </>
+    <>
+      <Head>
+        <title>
+          {communityStateValue.currentCommunity?.id
+            ? postStateValue.selectedPost?.title
+              ? "r/" +
+                communityStateValue.currentCommunity?.id +
+                " | " +
+                postStateValue.selectedPost?.title
+              : "Error"
+            : "Error"}
+        </title>
+        <link rel="icon" href="/images/redditFace.svg" />
+      </Head>
+      <PageContent>
+        {/* post
+         */}
+        <>
+          {postStateValue.selectedPost && (
+            <PostItem
+              post={postStateValue.selectedPost}
+              onVote={onVote}
+              onDeletePost={onDeletePost}
+              userVoteValue={
+                postStateValue.postVotes.find(
+                  (item) => item.postId === postStateValue.selectedPost?.id
+                )?.voteValue
+              }
+              userIsCreator={
+                user?.uid === postStateValue.selectedPost?.creatorId
+              }
+            ></PostItem>
+          )}{" "}
+          <Comments
+            user={user as User}
+            selectedPost={postStateValue.selectedPost}
+            communityId={postStateValue.selectedPost?.communityId as string}
+          />
+        </>
 
-      {/* About */}
-      <>
-        {communityStateValue.currentCommunity && (
-          <About communityData={communityStateValue.currentCommunity}></About>
-        )}
-      </>
-    </PageContent>
+        {/* About */}
+        <>
+          {communityStateValue.currentCommunity && (
+            <About communityData={communityStateValue.currentCommunity}></About>
+          )}
+        </>
+      </PageContent>
+    </>
   );
 };
 export default PostPage;

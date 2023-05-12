@@ -16,7 +16,7 @@ import {
 import usePosts from "@/hooks/usePosts";
 import { Post, PostVote } from "@/atoms/postsAtom";
 import PostLoader from "@/components/Posts/PostLoader";
-import { Stack } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 import PostItem from "@/components/Posts/PostItem";
 import CreatePostLink from "@/components/Community/CreatePostLink";
 import { QuerySnapshot } from "@google-cloud/firestore";
@@ -24,6 +24,7 @@ import useCommunityData from "@/hooks/useCommunityData";
 import Recommendations from "@/components/Community/Recommendations";
 import Premium from "@/components/Community/Premium";
 import PersonalHome from "@/components/Community/PersonalHome";
+import Head from "next/head";
 
 export default function Home() {
   const [user, loadingUser] = useAuthState(auth);
@@ -143,37 +144,43 @@ export default function Home() {
   }, [user, postStateValue.posts]);
 
   return (
-    <PageContent>
-      <>
-        <CreatePostLink></CreatePostLink>
-        {loading ? (
-          <PostLoader></PostLoader>
-        ) : (
-          <Stack>
-            {postStateValue.posts.map((post) => (
-              <PostItem
-                key={post.id}
-                post={post}
-                onSelectPost={onSelectPost}
-                onDeletePost={onDeletePost}
-                onVote={onVote}
-                userVoteValue={
-                  postStateValue.postVotes.find(
-                    (item) => item.postId === post.id
-                  )?.voteValue
-                }
-                userIsCreator={user?.uid === post.creatorId}
-                homePage={true}
-              ></PostItem>
-            ))}
-          </Stack>
-        )}
-      </>
-      <Stack spacing={5}>
-        <Recommendations></Recommendations>
-        <Premium></Premium>
-        <PersonalHome></PersonalHome>
-      </Stack>
-    </PageContent>
+    <>
+      <Head>
+        <title>Home</title>
+        <link rel="icon" href="/images/redditFace.svg" />
+      </Head>
+      <PageContent>
+        <>
+          <CreatePostLink></CreatePostLink>
+          {loading ? (
+            <PostLoader></PostLoader>
+          ) : (
+            <Stack>
+              {postStateValue.posts.map((post) => (
+                <PostItem
+                  key={post.id}
+                  post={post}
+                  onSelectPost={onSelectPost}
+                  onDeletePost={onDeletePost}
+                  onVote={onVote}
+                  userVoteValue={
+                    postStateValue.postVotes.find(
+                      (item) => item.postId === post.id
+                    )?.voteValue
+                  }
+                  userIsCreator={user?.uid === post.creatorId}
+                  homePage={true}
+                ></PostItem>
+              ))}
+            </Stack>
+          )}
+        </>
+        <Stack spacing={5}>
+          <Recommendations></Recommendations>
+          <Premium></Premium>
+          <PersonalHome></PersonalHome>
+        </Stack>
+      </PageContent>
+    </>
   );
 }

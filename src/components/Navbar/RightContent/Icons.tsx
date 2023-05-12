@@ -8,12 +8,15 @@ import {
   IoNotificationsOutline,
   IoVideocamOutline,
 } from "react-icons/io5";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
 // import useDirectory from "../../../hooks/useDirectory";
 
 type ActionIconsProps = {};
 
 const Icons: React.FC<ActionIconsProps> = () => {
-  //   const { toggleMenuOpen } = useDirectory();
+  // const { toggleMenuOpen } = useDirectory();
+  const setAuthModalState = useSetRecoilState(authModalState);
   return (
     <Flex>
       <Flex
@@ -29,6 +32,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={BsArrowUpRightCircle} fontSize={20}></Icon>
         </Flex>
@@ -39,6 +45,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={IoFilterCircleOutline} fontSize={20}></Icon>
         </Flex>
@@ -49,6 +58,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={IoVideocamOutline} fontSize={20}></Icon>
         </Flex>
@@ -61,6 +73,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={BsChatDots} fontSize={20}></Icon>
         </Flex>
@@ -71,6 +86,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={IoNotificationsOutline} fontSize={20}></Icon>
         </Flex>
@@ -82,6 +100,9 @@ const Icons: React.FC<ActionIconsProps> = () => {
           cursor={"pointer"}
           borderRadius={4}
           _hover={{ bg: "gray.200" }}
+          onClick={() =>
+            setAuthModalState({ open: true, view: "notAvailable" })
+          }
         >
           <Icon as={GrAdd} fontSize={20}></Icon>
         </Flex>
