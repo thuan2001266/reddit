@@ -11,7 +11,7 @@ import { useRecoilValue } from "recoil";
 
 type submitProps = {};
 
-const submit: React.FC<submitProps> = () => {
+const Submit: React.FC<submitProps> = () => {
   const [user] = useAuthState(auth);
   // const communityStateValue = useRecoilValue(communityState);
   const { communityStateValue } = useCommunityData();
@@ -36,4 +36,4 @@ const submit: React.FC<submitProps> = () => {
     </PageContent>
   );
 };
-export default submit;
+export default Submit;
