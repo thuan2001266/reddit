@@ -11,11 +11,14 @@ import { auth, firestore } from "@/firebase/clientApp";
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore";
 import { authModalState } from "@/atoms/authModalAtom";
+import { useRouter } from "next/router";
+import { log } from "console";
 
 const useCommunityData = () => {
   const [user] = useAuthState(auth);
@@ -24,6 +27,7 @@ const useCommunityData = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const onJoinOrLeaveCommunity = (
     communityData: Community,
@@ -48,9 +52,11 @@ const useCommunityData = () => {
       );
 
       const snippets = snippetDocs.docs.map((doc) => ({ ...doc.data() }));
+
       setCommunityStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true,
       }));
     } catch (error: any) {
       console.log("error:", error);
@@ -67,6 +73,7 @@ const useCommunityData = () => {
       const newSnippet: CommunitySnippet = {
         communityId: communityData.id,
         imageURL: communityData.imageURL || "",
+        isModerator: user?.uid === communityData.creatorId,
       };
 
       batch.set(
@@ -79,7 +86,7 @@ const useCommunityData = () => {
       );
 
       batch.update(doc(firestore, `communities/${communityData.id}`), {
-        NumberOfMembers: increment(1),
+        numberOfMembers: increment(1),
       });
 
       await batch.commit();
@@ -101,7 +108,7 @@ const useCommunityData = () => {
         doc(firestore, `users/${user?.uid}/communitySnippets`, communityId)
       );
       batch.update(doc(firestore, `communities`, communityId), {
-        NumberOfMembers: increment(-1),
+        numberOfMembers: increment(-1),
       });
       await batch.commit();
       setCommunityStateValue((prev) => ({
@@ -117,12 +124,40 @@ const useCommunityData = () => {
     setLoading(false);
   };
 
+  const getCommunityData = async (communityId: string) => {
+    try {
+      const communityDocRef = doc(firestore, `communities/${communityId}`);
+      const communityDoc = await getDoc(communityDocRef);
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community,
+      }));
+    } catch (error) {
+      console.log("getCommunityData error: ", error);
+    }
+  };
+
   useEffect(() => {
     if (!user) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+        snippetsFetched: false,
+      }));
       return;
     }
     getMySnippets();
   }, [user]);
+
+  useEffect(() => {
+    const { communityId } = router.query;
+    if (communityId && !communityStateValue.currentCommunity) {
+      getCommunityData(communityId as string);
+    }
+  }, [router.query, communityStateValue.currentCommunity]);
 
   return {
     communityStateValue,

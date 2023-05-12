@@ -27,8 +27,10 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "@/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import useSelectFile from "@/hooks/useSelectFile";
 type NewPostFormProps = {
   user: User;
+  communityImageURL?: string;
 };
 
 const formTabs: TabItemType[] = [
@@ -44,7 +46,10 @@ export type TabItemType = {
   icon: typeof Icon.arguments;
 };
 
-const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
+const NewPostForm: React.FC<NewPostFormProps> = ({
+  user,
+  communityImageURL,
+}) => {
   const router = useRouter();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
@@ -52,12 +57,14 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
     body: "",
   });
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<string>();
+  // const [selectedFile, setSelectedFile] = useState<string>();
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [error, setError] = useState(false);
   const handleCreatePost = async () => {
     const { communityId } = router.query;
     const newPost: Post = {
       communityId: communityId as string,
+      communityImageURL: communityImageURL || "",
       creatorId: user?.uid,
       creatorDisplayName: user.email!.split("@")[0],
       title: textInputs.title,
@@ -66,7 +73,6 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
       voteStatus: 0,
       createAt: serverTimestamp() as Timestamp,
     };
-
     setLoading(true);
     try {
       const postDocRef = await addDoc(collection(firestore, `posts`), newPost);
@@ -87,17 +93,17 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
     setLoading(false);
   };
 
-  const onSelectedImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0]);
-    }
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string);
-      }
-    };
-  };
+  // const onSelectedImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const reader = new FileReader();
+  //   if (event.target.files?.[0]) {
+  //     reader.readAsDataURL(event.target.files[0]);
+  //   }
+  //   reader.onload = (readerEvent) => {
+  //     if (readerEvent.target?.result) {
+  //       setSelectedFile(readerEvent.target.result as string);
+  //     }
+  //   };
+  // };
 
   const onTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -134,7 +140,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
         {selectedTab === "Images & Videos" && (
           <ImageUpload
             selectedFile={selectedFile}
-            onSelectedImage={onSelectedImage}
+            onSelectedImage={onSelectFile}
             setSelectedTab={setSelectedTab}
             setSelectedFile={setSelectedFile}
           ></ImageUpload>
