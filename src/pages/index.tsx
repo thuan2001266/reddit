@@ -50,9 +50,9 @@ export default function Home() {
 
         const postQuery = query(
           collection(firestore, "posts"),
-          where("communityId", "in", myCommunityIds),
-          limit(10)
+          where("communityId", "in", myCommunityIds)
         );
+        // limit(10)
         const postDocs = await getDocs(postQuery);
         const posts = postDocs.docs.map((doc) => ({
           id: doc.id,
@@ -84,9 +84,10 @@ export default function Home() {
     try {
       const postQuery = query(
         collection(firestore, "posts"),
-        orderBy("voteStatus", "desc"),
-        limit(10)
+        orderBy("voteStatus", "desc")
       );
+      // ,
+      //   limit(10)
       const postDocs = await getDocs(postQuery);
       const posts = postDocs.docs.map((post) => ({
         ...post.data(),

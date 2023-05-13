@@ -18,7 +18,7 @@ const Comunities: React.FC<ComunitiesProps> = () => {
   // console.log("communityStateValue:", communityStateValue);
 
   return (
-    <>
+    <Box maxHeight={"445px"} overflowY={"scroll"}>
       <CreateCommunityModal
         open={open}
         handleClose={() => setOpen(false)}
@@ -79,7 +79,7 @@ const Comunities: React.FC<ComunitiesProps> = () => {
           ></MenuListItem>
         ))}
       </Box>
-    </>
+    </Box>
   );
 };
 export default Comunities;

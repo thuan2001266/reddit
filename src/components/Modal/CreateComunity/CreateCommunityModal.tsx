@@ -91,11 +91,11 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
       });
       handleClose();
       toggleMenuOpen();
-      router.push(`r/${communityName}`);
+      router.push(`/r/${communityName}`);
     } catch (error: any) {
       setError(error.message);
     }
-
+    setCommunityName("");
     setLoading(false);
     // handleClose();
   };
